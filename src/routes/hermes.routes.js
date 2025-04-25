@@ -25,7 +25,6 @@ const webhookValidation = [
   body("metadata").optional().isObject(),
 ];
 
-hermesRouter.get("/", handleTestLiveServer);
 hermesRouter.post("/send", webhookValidation, handleDiscordSendMessageV2);
 
 module.exports = hermesRouter;
