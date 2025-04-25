@@ -176,6 +176,13 @@ When sending data to the webhook, the API will create a Discord message with the
 
 ```
 
+### Discord Message
+
+<details>
+  <summary>Click to view the image</summary>
+  <img src="https://res.cloudinary.com/cocoder/image/upload/v1745605194/Projects/hermes-courier/discord-screen_diqip8.png" alt="Discord Screen" />
+</details>
+
 ---
 
 ## **Technologies Used**
