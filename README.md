@@ -1,4 +1,4 @@
-### **API Documentation for Hermes-Courier: Notification Service**
+## **API Documentation for Hermes-Courier: Notification Service**
 
 ---
 
