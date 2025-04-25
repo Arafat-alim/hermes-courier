@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // This must be here before any routes
 
-app.use("/", handleTestLiveServer);
 app.use("/api/v1", hermesRouter);
+app.use("/", handleTestLiveServer);
 
 module.exports = app;
