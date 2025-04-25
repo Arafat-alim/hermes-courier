@@ -1,8 +1,8 @@
 const express = require("express");
-const { handleGetLiveServer } = require("../controller/hermes.controller");
+const { handleTestLiveServer } = require("../controller/hermes.controller");
 
 const hermesRouter = express.Router();
 
-hermesRouter.get("/", handleGetLiveServer);
+hermesRouter.get("/", handleTestLiveServer);
 
 module.exports = hermesRouter;

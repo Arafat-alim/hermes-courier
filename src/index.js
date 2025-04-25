@@ -4,6 +4,6 @@ const hermesRouter = require("./routes/hermes.routes");
 
 const app = express();
 
-app.use("/me", hermesRouter);
+app.use("/", hermesRouter);
 
 module.exports = app;
