@@ -1,9 +1,14 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const hermesRouter = require("./routes/hermes.routes");
 
 const app = express();
 
-app.use("/", hermesRouter);
+//! Middlewares
+app.use(cors());
+app.use(express.json()); // This must be here before any routes
+
+app.use("/api/v1", hermesRouter);
 
 module.exports = app;
