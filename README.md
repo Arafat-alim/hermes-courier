@@ -1,162 +1,144 @@
-### **HermesServices - GitHub README**
-
-Welcome to **HermesServices**! 🚀 This project provides an easy-to-use service for sending notifications via Discord Webhooks. It's designed to be intuitive, flexible, and scalable, making it ideal for both beginner developers and advanced users looking for a straightforward way to send messages with various levels of severity, color-coding, and metadata support.
+### **API Documentation for Hermes-Courier: Notification Service**
 
 ---
 
-## **Features**
+## **Version 1.0.0**
 
-- **Customizable Notifications**: Choose from a variety of options like severity, colors, and metadata.
-- **Multiple Platforms Supported**: Can be used in Node.js, React Native (with or without Expo).
-- **Clean and Simple**: Developer-friendly, well-documented, and easy to integrate.
+### **Base URL**
 
----
-
-## **Installation**
-
-To get started, you'll need to install the necessary dependencies.
-
-### **Install via npm:**
-
-```bash
-npm install axios
-```
+`http://localhost:8811/api/v1`
 
 ---
 
-## **Usage**
+## **API Endpoints**
 
-Below is how you can use **HermesServices** in different environments.
+### **1. POST /send**
 
-### **1. Node.js Usage**
+Send a notification message to Discord via webhook.
 
-In your Node.js application, you can use the `HermesServices` class to send notifications to your Discord webhook.
+#### **Request**
 
-#### **Setup**
+- **URL:** `/send`
+- **Method:** `POST`
+- **Authentication:** None (Use the provided webhook URL in the request body)
 
-1. First, require the HermesServices module and set up your configuration.
+#### **Request Body (JSON)**
 
-```js
-const { HermesServices } = require("./path-to-hermes-services"); // Adjust the path
-const config = require("../../config"); // Configuration containing default values like Webhook URLs
+| Field           | Type     | Description                                                                                                                    | Required | Example Value                                       |
+| --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------ | -------- | --------------------------------------------------- |
+| `avatar_url`    | `string` | Avatar URL to display on the notification                                                                                      | Optional | `https://someimageurl.com/avatar.jpg`               |
+| `title`         | `string` | Title of the notification message                                                                                              | Optional | `System Alert: New Notification`                    |
+| `jsonData`      | `object` | JSON data to be included in the notification description (formatted as JSON)                                                   | Required | `{"event": "maintenance", "status": "in-progress"}` |
+| `footerText`    | `string` | Footer text displayed in the notification                                                                                      | Optional | `Powered by Hermes Courier`                         |
+| `color`         | `string` | The color of the notification embed. Choose from the following: `SUCCESS`, `WARNING`, `DANGER`, `INFO`, `MAINTENANCE`, `DEBUG` | Optional | `SUCCESS`                                           |
+| `severity`      | `string` | Severity level of the message. Choose from: `INFO`, `WARNING`, `ERROR`, `CRITICAL`, `DEBUG`                                    | Optional | `INFO`                                              |
+| `webhookUrl`    | `string` | Discord webhook URL. If not provided, the default webhook URL from configuration will be used.                                 | Optional | `https://discord.com/api/webhooks/xxxxx/xxxxx`      |
+| `extraMetadata` | `object` | Additional metadata to include in the embed fields. It will be displayed as a JSON string.                                     | Optional | `{ "user_id": "12345", "session": "xyz-abc-123" }`  |
+| `content`       | `string` | Content (message) of the notification (visible text). If not provided, the default "Knock Knock" will appear.                  | Optional | `System running smoothly.`                          |
+
+#### **Response Body (JSON)**
+
+| Field     | Type      | Description                                                           | Example Value                                |
+| --------- | --------- | --------------------------------------------------------------------- | -------------------------------------------- |
+| `success` | `boolean` | Status of the API call                                                | `true`                                       |
+| `message` | `string`  | Message indicating the status of the notification                     | `Notification sent to Discord successfully!` |
+| `id`      | `string`  | The UUID generated for this notification request, useful for tracking | `b0548b4d-7f5c-4d2e-96f7-099f1cb40b8c`       |
+| `error`   | `string`  | If the request failed, the error message                              | `Webhook Error: Invalid webhook URL`         |
+
+#### **Response Example**
+
+##### **Success Response:**
+
+```json
+{
+  "success": true,
+  "message": "Notification sent to Discord successfully!",
+  "id": "b0548b4d-7f5c-4d2e-96f7-099f1cb40b8c"
+}
 ```
 
-2. Then, use the `sendDataToWebhook` method to send your custom notifications.
+##### **Error Response:**
 
-#### **Example Usage in Node.js**
-
-```js
-const { HermesServices } = require("./hermesServices"); // Adjust the path
-const config = require("../../config"); // Import configuration
-
-// Send a simple info notification to a Discord channel
-HermesServices.sendDataToWebhook({
-  jsonData: { message: "System is running smoothly!" },
-  severity: HermesServices.SEVERITY.INFO,
-  color: HermesServices.COLORS.SUCCESS,
-  webhookUrl: config.discord.defaultWebhookUrl,
-  title: "System Update",
-  content: "Everything is operating as expected.",
-});
-```
-
----
-
-### **2. React Native (with Expo or not)**
-
-You can easily use **HermesServices** within React Native or React Native Expo applications as well.
-
-#### **1. Setup in React Native (Non-Expo)**
-
-1. Install dependencies:
-
-```bash
-npm install axios
-```
-
-2. Set up HermesServices:
-
-```js
-import { HermesServices } from "./path-to-hermes-services"; // Adjust path to where your HermesServices is stored
-
-const sendNotification = async () => {
-  try {
-    await HermesServices.sendDataToWebhook({
-      jsonData: { message: "A new update is available!" },
-      severity: HermesServices.SEVERITY.INFO,
-      color: HermesServices.COLORS.INFO,
-      webhookUrl: "YOUR_DISCORD_WEBHOOK_URL",
-      title: "Update Alert",
-      content: "Your app is up to date!",
-    });
-  } catch (error) {
-    console.error("Error sending notification:", error);
-  }
-};
-```
-
-#### **2. Setup in React Native (Expo)**
-
-In Expo, it's the same as React Native, but if you're using Expo managed workflow, you’ll need to ensure you have Axios installed.
-
-1. Install dependencies:
-
-```bash
-expo install axios
-```
-
-2. Set up HermesServices:
-
-```js
-import { HermesServices } from "./path-to-hermes-services"; // Adjust path to where your HermesServices is stored
-
-const sendNotification = async () => {
-  try {
-    await HermesServices.sendDataToWebhook({
-      jsonData: { message: "Your device is synced!" },
-      severity: HermesServices.SEVERITY.INFO,
-      color: HermesServices.COLORS.SUCCESS,
-      webhookUrl: "YOUR_DISCORD_WEBHOOK_URL",
-      title: "Sync Complete",
-      content: "Your app is fully synced with the server!",
-    });
-  } catch (error) {
-    console.error("Error sending notification:", error);
-  }
-};
+```json
+{
+  "success": false,
+  "message": "Failed to send message",
+  "error": "Webhook Error: Invalid webhook URL"
+}
 ```
 
 ---
 
-## **API Documentation**
+### **2. GET /**
 
-Refer to the full **HermesServices** API documentation below for more details on how to customize your notifications.
+#### **Request**
 
-### **`sendDataToWebhook` method**
+- **URL:** `/`
+- **Method:** `GET`
+- **Authentication:** None
 
-#### **Parameters:**
+#### **Response (JSON)**
 
-- **`jsonData`**: _(Object)_ — Data you want to send in the notification. Will be displayed in a prettified JSON format in the embed.
-- **`severity`**: _(String)_ — Severity of the message. Possible values:
-  - `HermesServices.SEVERITY.INFO` (default)
-  - `HermesServices.SEVERITY.WARNING`
-  - `HermesServices.SEVERITY.ERROR`
-  - `HermesServices.SEVERITY.CRITICAL`
-  - `HermesServices.SEVERITY.DEBUG`
-- **`color`**: _(Number)_ — Embed color. Use one of the predefined constants:
-  - `HermesServices.COLORS.DEFAULT`
-  - `HermesServices.COLORS.SUCCESS`
-  - `HermesServices.COLORS.WARNING`
-  - `HermesServices.COLORS.DANGER`
-  - `HermesServices.COLORS.INFO`
-  - `HermesServices.COLORS.MAINTENANCE`
-  - `HermesServices.COLORS.DEBUG`
-- **`webhookUrl`**: _(String)_ — The Discord webhook URL to which the notification will be sent. Defaults to the URL in your config.
-- **`title`**: _(String)_ — The title of the embed (optional). Defaults to `New Notification from {appName}`.
-- **`avatar`**: _(String)_ — The URL of the avatar image for the embed (optional).
-- **`footerText`**: _(String)_ — The footer text to be shown in the embed (optional).
-- **`extraMetadata`**: _(Object)_ — Extra metadata to add context to the notification (optional).
-- **`content`**: _(String)_ — The main content of the message (optional).
+| Field     | Type      | Description                                      | Example Value                                |
+| --------- | --------- | ------------------------------------------------ | -------------------------------------------- |
+| `success` | `boolean` | Status of the request                            | `true`                                       |
+| `message` | `string`  | A message confirming the server's running status | `Server is running at http://localhost:8811` |
+
+#### **Response Example**
+
+```json
+{
+  "success": true,
+  "message": "Server is running at http://localhost:8811"
+}
+```
+
+---
+
+## **Error Handling**
+
+All errors are handled with appropriate HTTP status codes and error messages.
+
+| Error Code | Description                     | Example                                  |
+| ---------- | ------------------------------- | ---------------------------------------- |
+| 400        | Bad Request - Validation failed | `Validation errors in the request body.` |
+| 500        | Internal Server Error           | `Failed to send message`                 |
+
+---
+
+## **Webhook Payload Structure (Discord Embed)**
+
+When sending data to the webhook, the API will create a Discord message with the following embed structure:
+
+````json
+{
+  "embeds": [
+    {
+      "title": "Notification Title: b0548b4d-7f5c-4d2e-96f7-099f1cb40b8c",
+      "avatar_url": "https://someimageurl.com/avatar.jpg",
+      "content": "System running smoothly.",
+      "description": "```json\n{\"event\":\"maintenance\",\"status\":\"in-progress\"}\n```",
+      "color": 3066993,
+      "footer": {
+        "text": "Powered by Hermes Courier",
+        "icon_url": "https://someimageurl.com/avatar.jpg"
+      },
+      "severity": "info",
+      "timestamp": "2023-10-24T10:10:10.000Z",
+      "uuid": "b0548b4d-7f5c-4d2e-96f7-099f1cb40b8c",
+      "fields": [
+        {
+          "name": "Additional Info",
+          "value": "{\"user_id\":\"12345\",\"session\":\"xyz-abc-123\"}",
+          "inline": false
+        }
+      ]
+    }
+  ]
+}
+````
+
+### Postman Body
 
 ```json
 {
@@ -183,82 +165,94 @@ Refer to the full **HermesServices** API documentation below for more details on
 }
 ```
 
-#### **Returns**:
+### Postman response
 
-- A promise resolving with the response data from the webhook request.
-
-```json
+```
 {
-  "success": true,
-  "message": "Notification sent to Discord successfully!",
-  "id": "f3f87ea6-914b-437c-850a-052c01122a86"
+    "success": true,
+    "message": "Notification sent to Discord successfully!",
+    "id": "f3f87ea6-914b-437c-850a-052c01122a86"
 }
-```
 
-#### **Example**:
-
-```js
-HermesServices.sendDataToWebhook({
-  jsonData: { message: "This is a debug message" },
-  severity: HermesServices.SEVERITY.DEBUG,
-  color: HermesServices.COLORS.DEBUG,
-  title: "Debug Info",
-  footerText: "Debugging Process",
-  content: "This is a debug message to help troubleshoot.",
-});
 ```
 
 ---
 
-## **Error Handling**
+## **Technologies Used**
 
-Errors are thrown if the webhook request fails. You can handle errors gracefully with a `try-catch` block.
+- **Express** - Backend framework for routing.
+- **Axios** - HTTP client used to send requests to Discord.
+- **uuid** - UUID library for generating unique identifiers.
+- **Discord Webhooks** - Service to send messages directly to Discord channels.
 
-```js
-try {
-  await HermesServices.sendDataToWebhook({
-    /* options */
-  });
-} catch (error) {
-  console.error("Failed to send notification:", error.message);
-}
+---
+
+## **Changelog**
+
+- **1.0.0** - Initial release.
+
+---
+
+## **Run the Application Locally**
+
+To run this application locally, follow these steps:
+
+1. **Clone the repository**:
+
+```bash
+git clone https://github.com/Arafat-alim/hermes-courier.git
 ```
 
----
+2. **Install dependencies**:
 
-## **Configuration**
-
-By default, the webhook URL and other options are stored in a configuration file. Make sure you have a `config` object set up with the necessary values.
-
-### Example **`config.js`**:
-
-```js
-module.exports = {
-  discord: {
-    defaultWebhookUrl: "YOUR_DEFAULT_DISCORD_WEBHOOK_URL",
-  },
-  app: {
-    name: "My Application",
-  },
-};
+```bash
+cd hermes-courier
+npm install
 ```
 
+3. **Set up environment variables**:
+
+Copy `.env.example` to `.env` and set up your Discord webhook URL and any other necessary configuration.
+
+```bash
+cp .env.example .env
+```
+
+4. **Start the server**:
+
+```bash
+npm run dev
+```
+
+The application will be running on `http://localhost:8811`.
+
 ---
 
-## **Contributing**
+### **Contribution Guidelines**
 
-We love contributions! Feel free to fork this repo, make changes, and create a pull request. If you have suggestions or find bugs, please open an issue.
-
----
-
-## **License**
-
-MIT License - See the [LICENSE](LICENSE) file for more details.
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/xyz`).
+3. Commit your changes (`git commit -am 'Add new feature'`).
+4. Push to the branch (`git push origin feature/xyz`).
+5. Create a new Pull Request.
 
 ---
 
-## **Final Thoughts**
+### **License**
 
-With **HermesServices**, you can effortlessly integrate rich, customizable notifications into your application. Whether you're using **Node.js** or **React Native**, this service is ready to go and can be adapted for a variety of use cases. From monitoring systems to alerting users, you're just a few lines of code away from a better notification system.
+ISC License - see the [LICENSE](LICENSE) file for details.
 
-Enjoy coding, and stay connected! 🚀
+---
+
+## **Additional Notes**
+
+- All requests to `/send` will use Discord's webhook to post messages. Ensure that the provided webhook URL is valid and active.
+- The `uuid` in the response and the webhook payload helps track the notification and correlate logs or troubleshooting efforts.
+
+---
+
+By using **Hermes-Courier**, you can seamlessly send structured, dynamic notifications to your Discord channels, enhancing visibility into your system events.
+
+---
+
+This is your **OpenAPI 3.0** style documentation for the `/send` API. It's clear, robust, and designed to scale as you add more features and integrations to the Hermes-Courier service.
