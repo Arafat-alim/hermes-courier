@@ -1,0 +1,31 @@
+{
+  "name": "hermes-courier",
+  "version": "1.0.0",
+  "description": "This project is basically help us to send the notification of our application to discord channel via webhook url.",
+  "keywords": [
+    "discord",
+    "api",
+    "hermes-courier"
+  ],
+  "homepage": "https://github.com/Arafat-alim/hermes-courier#readme",
+  "bugs": {
+    "url": "https://github.com/Arafat-alim/hermes-courier/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arafat-alim/hermes-courier.git"
+  },
+  "license": "ISC",
+  "author": "Arafat Alim",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
