@@ -254,5 +254,3 @@ ISC License - see the [LICENSE](LICENSE) file for details.
 By using **Hermes-Courier**, you can seamlessly send structured, dynamic notifications to your Discord channels, enhancing visibility into your system events.
 
 ---
-
-This is your **OpenAPI 3.0** style documentation for the `/send` API. It's clear, robust, and designed to scale as you add more features and integrations to the Hermes-Courier service.
